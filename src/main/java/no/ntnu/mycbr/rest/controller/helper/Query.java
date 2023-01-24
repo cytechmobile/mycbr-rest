@@ -103,6 +103,23 @@ public class Query implements RetrievalCustomer {
                             query.addAttribute(attdesc, muliSymbol);
                         }
                     }
+                    if (attdesc.getClass().getSimpleName().equalsIgnoreCase("StringDesc")){
+                        StringDesc aStringAtt = (StringDesc) attdesc;
+                        if (!aStringAtt.isMultiple()) {
+                            StringDesc queryDesc = (StringDesc) myConcept.getAllAttributeDescs().get(name);
+                            query.addAttribute(queryDesc, queryDesc.getAttribute(att.getValue().toString()));
+                        } else {
+                            LinkedList<Attribute> llAtts = new LinkedList<>();
+                            StringTokenizer st = new StringTokenizer((String) att.getValue(), ",");
+                            while (st.hasMoreElements()) {
+                                String symbolName = st.nextElement().toString().trim();
+                                llAtts.add(aStringAtt.getAttribute(symbolName));
+                            }
+
+                            MultipleAttribute<StringDesc> muliSymbol = new MultipleAttribute<>(aStringAtt, llAtts);
+                            query.addAttribute(attdesc, muliSymbol);
+                        }
+                    }
                 }
 
                 if (k > -1) {
