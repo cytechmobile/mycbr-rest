@@ -66,6 +66,7 @@ public class CaseService {
             instances.add(instance);
             afct.cacheNeuralSims(instances);
         }
+        cb.getProject().save();
 
         return instance;
     }
