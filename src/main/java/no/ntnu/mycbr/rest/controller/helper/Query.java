@@ -93,7 +93,7 @@ public class Query implements RetrievalCustomer {
                         }
                         else {
                             LinkedList<Attribute> llAtts = new LinkedList<Attribute>();
-                            StringTokenizer st = new StringTokenizer((String) att.getValue(), ",");
+                            StringTokenizer st = new StringTokenizer((String) att.getValue(), ";");
                             while (st.hasMoreElements()) {
                                 String symbolName = st.nextElement().toString().trim();
                                 llAtts.add(aSymbolAtt.getAttribute(symbolName));
@@ -110,7 +110,7 @@ public class Query implements RetrievalCustomer {
                             query.addAttribute(queryDesc, queryDesc.getAttribute(att.getValue().toString()));
                         } else {
                             LinkedList<Attribute> llAtts = new LinkedList<>();
-                            StringTokenizer st = new StringTokenizer((String) att.getValue(), ",");
+                            StringTokenizer st = new StringTokenizer((String) att.getValue(), ";");
                             while (st.hasMoreElements()) {
                                 String symbolName = st.nextElement().toString().trim();
                                 llAtts.add(aStringAtt.getAttribute(symbolName));

@@ -5,10 +5,7 @@ import no.ntnu.mycbr.core.Project;
 import no.ntnu.mycbr.core.casebase.Attribute;
 import no.ntnu.mycbr.core.casebase.Instance;
 import no.ntnu.mycbr.core.casebase.MultipleAttribute;
-import no.ntnu.mycbr.core.model.AttributeDesc;
-import no.ntnu.mycbr.core.model.Concept;
-import no.ntnu.mycbr.core.model.ConceptDesc;
-import no.ntnu.mycbr.core.model.SymbolDesc;
+import no.ntnu.mycbr.core.model.*;
 import no.ntnu.mycbr.core.similarity.AmalgamationFct;
 import no.ntnu.mycbr.core.similarity.config.AmalgamationConfig;
 import no.ntnu.mycbr.rest.App;
@@ -37,16 +34,29 @@ public class CaseService {
 
                 if (attributeDesc.isMultiple()) {
                    LinkedList<Attribute> attLL = new LinkedList<Attribute>();
-                    SymbolDesc aSym = (SymbolDesc) c.getAttributeDesc(strKey);
 
-                    StringTokenizer st = new StringTokenizer(inpcase.get(key).toString(), ",");
-                    while (st.hasMoreElements()){
-                        String symbolName = st.nextElement().toString().trim();
-                        attLL.add(aSym.getAttribute(symbolName));
-                    }
-                    MultipleAttribute<SymbolDesc> multiSymbol = new MultipleAttribute<SymbolDesc>(aSym, attLL);
-                    instance.addAttribute(aSym, multiSymbol);
+                   AttributeDesc attrDesc = c.getAttributeDesc(strKey);
+                   if (attrDesc.getClass().getSimpleName().equalsIgnoreCase("StringDesc")){
+                       StringDesc aSym = (StringDesc) c.getAttributeDesc(strKey);
 
+                       StringTokenizer st = new StringTokenizer(inpcase.get(key).toString(), ";");
+                       while (st.hasMoreElements()) {
+                           String symbolName = st.nextElement().toString().trim();
+                           attLL.add(aSym.getAttribute(symbolName));
+                       }
+                       MultipleAttribute<StringDesc> multiSymbol = new MultipleAttribute<StringDesc>(aSym, attLL);
+                       instance.addAttribute(aSym, multiSymbol);
+                   } else {
+                       SymbolDesc aSym = (SymbolDesc) c.getAttributeDesc(strKey);
+
+                       StringTokenizer st = new StringTokenizer(inpcase.get(key).toString(), ";");
+                       while (st.hasMoreElements()) {
+                           String symbolName = st.nextElement().toString().trim();
+                           attLL.add(aSym.getAttribute(symbolName));
+                       }
+                       MultipleAttribute<SymbolDesc> multiSymbol = new MultipleAttribute<SymbolDesc>(aSym, attLL);
+                       instance.addAttribute(aSym, multiSymbol);
+                   }
                 } else {
                     instance.addAttribute(attributeDesc, inpcase.get(key));
                 }
