@@ -21,6 +21,8 @@ import no.ntnu.mycbr.rest.utils.TemporaryAmalgamFctManager;
 import java.util.*;
 import java.util.concurrent.*;
 
+import static no.ntnu.mycbr.rest.utils.Constants.UNDEFINED;
+
 /**
  * Created by kerstin on 05/08/16.
  */
@@ -70,13 +72,18 @@ public class Query implements RetrievalCustomer {
 
             try {
                 Instance query = r.getQueryInstance();
-
+                Project prj = App.getProject();
                 for (Map.Entry<String, Object> att : queryContent.entrySet()) {
                     String name = att.getKey();
                     AttributeDesc attdesc = myConcept.getAttributeDesc(name);
                     if (attdesc.getClass().getSimpleName().equalsIgnoreCase("FloatDesc")){
                         FloatDesc aFloatAtt = (FloatDesc) attdesc;
-                        query.addAttribute(attdesc, Float.parseFloat(att.getValue().toString()));
+                        if (att.getValue() instanceof Double || att.getValue() instanceof Float) {
+                            query.addAttribute(attdesc, Float.parseFloat(att.getValue().toString()));
+                        } else {
+                            String value = att.getValue() != null ? att.getValue().toString() : UNDEFINED;
+                            query.addAttribute(attdesc, prj.getSpecialAttribute(value));
+                        }
                     }
                     if (attdesc.getClass().getSimpleName().equalsIgnoreCase("IntegerDesc")){
                         IntegerDesc aIntegerAtt = (IntegerDesc) attdesc;
